@@ -1,0 +1,24 @@
+# render.yaml
+services:
+  - type: web
+    name: pyshort
+    runtime: docker
+    env: docker
+    build:
+      dockerfile: Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pyshort_db
+          property: connectionString
+      - key: HASHIDS_SALT
+        generateValue: true
+      - key: BASE_URL
+        sync: false
+        value: https://pyshort.onrender.com
+
+  - type: postgres
+    name: pyshort_db
+    plan: free
+    databaseName: pyshort
+    user: pyshort_user

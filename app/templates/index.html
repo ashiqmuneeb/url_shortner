@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="bg-white rounded-xl shadow p-6">
+  <form action="/shorten" method="post" class="space-y-4">
+    <div>
+      <label for="url" class="block text-sm font-medium mb-1">Long URL</label>
+      <input id="url" name="url" type="url" required placeholder="https://example.com/some/really/long/path?x=1"
+             class="w-full rounded-lg border-slate-300 focus:border-slate-500 focus:ring-slate-500">
+    </div>
+    <div>
+      <label for="custom_alias" class="block text-sm font-medium mb-1">Custom alias (optional)</label>
+      <div class="flex gap-2">
+        <span class="inline-flex items-center px-3 rounded-lg rounded-r-none border border-r-0 border-slate-300 bg-slate-100 text-slate-600 text-sm">
+          /
+        </span>
+        <input id="custom_alias" name="custom_alias" type="text" pattern="[A-Za-z0-9_-]{3,64}" placeholder="my-awesome-link"
+               class="w-full rounded-lg rounded-l-none border-slate-300 focus:border-slate-500 focus:ring-slate-500">
+      </div>
+      <p class="text-xs text-slate-500 mt-1">Letters, numbers, "-" and "_" (3–64 chars).</p>
+    </div>
+    <button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-900 text-white hover:bg-black">
+      <span>Shorten URL</span>
+    </button>
+  </form>
+</section>
+
+{% if error %}
+  <p class="mt-4 p-3 rounded bg-red-50 text-red-700 border border-red-200">{{ error }}</p>
+{% endif %}
+
+{% if short_url %}
+  <section class="mt-6 bg-white rounded-xl shadow p-6 space-y-3">
+    <h2 class="font-semibold">Your short link</h2>
+    <div class="flex flex-col md:flex-row md:items-center gap-3">
+      <code id="shortLink" class="text-lg bg-slate-100 px-3 py-2 rounded">{{ short_url }}</code>
+      <button onclick="copyText('#shortLink')" class="px-3 py-2 rounded bg-slate-800 text-white hover:bg-black">Copy</button>
+      <a href="{{ short_url }}" target="_blank" class="px-3 py-2 rounded border border-slate-300 hover:bg-slate-50">Open</a>
+      <a href="/stats/{{ code }}" class="px-3 py-2 rounded border border-slate-300 hover:bg-slate-50">View stats</a>
+    </div>
+    <div class="mt-4">
+      <h3 class="text-sm text-slate-600 mb-2">QR Code</h3>
+      <!-- Render QR server-side as data URL -->
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ short_url | urlencode }}" alt="QR" class="rounded border" width="160" height="160">
+      <!-- For offline/strict environments, replace with local qrcode generation if needed -->
+    </div>
+  </section>
+{% endif %}
+
+<section class="mt-8">
+  <h2 class="font-semibold mb-3">Recent links</h2>
+  <div class="grid gap-3">
+    {% for item in recent %}
+      <div class="bg-white rounded-lg p-4 border flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+        <div class="truncate">
+          <a class="font-mono underline decoration-dotted" href="/{{ item.code }}" target="_blank">{{ request.url.scheme }}://{{ request.headers.get('host') }}/{{ item.code }}</a>
+          <div class="text-sm text-slate-500 truncate">{{ item.original_url }}</div>
+        </div>
+        <div class="text-sm text-slate-600">Clicks: {{ item.clicks or 0 }}</div>
+      </div>
+    {% else %}
+      <p class="text-sm text-slate-500">No links yet — be the first! 🚀</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

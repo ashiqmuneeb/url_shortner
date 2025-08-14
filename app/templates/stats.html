@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="bg-white rounded-xl shadow p-6 space-y-4">
+  <h2 class="text-xl font-semibold">Stats</h2>
+  <div class="grid gap-2 text-sm">
+    <div><span class="text-slate-500">Short URL:</span> <a class="underline decoration-dotted" href="{{ short_url }}" target="_blank">{{ short_url }}</a></div>
+    <div><span class="text-slate-500">Original URL:</span> <span class="break-all">{{ item.original_url }}</span></div>
+    <div><span class="text-slate-500">Clicks:</span> {{ item.clicks or 0 }}</div>
+    <div><span class="text-slate-500">Created:</span> {{ item.created_at }}</div>
+    <div><span class="text-slate-500">Last accessed:</span> {{ item.last_accessed or "—" }}</div>
+  </div>
+  <a href="/" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50">← Back</a>
+</section>
+{% endblock %}

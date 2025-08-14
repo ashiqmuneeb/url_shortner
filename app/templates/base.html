@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PyShort ✂️</title>
+  <meta name="description" content="A tiny, fast, Python-powered URL shortener">
+  <!-- Tailwind via CDN for speed; swap to compiled Tailwind in production if desired -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✂️</text></svg>">
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <header class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold tracking-tight">PyShort <span class="text-slate-400">/ a neat little URL shortener</span></h1>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="max-w-3xl mx-auto px-4 py-10 text-sm text-slate-500">
+    <div class="flex items-center justify-between">
+      <span>© {{  (now() if now else '')  }} PyShort</span>
+      <a class="underline decoration-dotted" href="/docs">API Docs</a>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
